@@ -1,0 +1,15 @@
+{
+  "name": "phl-250",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "npm@9.2.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  },
+  "engines": {
+    "node": ">=16.15.0"
+  }
+}
