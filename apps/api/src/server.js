@@ -27,9 +27,13 @@ app.use(express.urlencoded({ extended: false }));
 io.on('connection', (socket) => {
   console.log('User connected');
 
-  socket.on("createDrawing", (data) => {
+  socket.on('createDrawing', ({ promptImage, signatureImage }) => {
     console.log(`user with id-${socket.id} has given data`);
-    console.log(data);
+    console.log(promptImage);
+
+    io.emit('displayImage', { promptImage });
+
+    // TODO: Add logic for sending signatures to print page
   });
 });
 
