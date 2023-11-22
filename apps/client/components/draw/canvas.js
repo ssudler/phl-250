@@ -44,7 +44,6 @@ const DrawingCanvas = ({ isSubmitting, setImage }) => {
     if (isSubmitting) handleExportToPNG();
   }, [isSubmitting]);
 
-  // TODO: Set height and width proportionately based on screen size
   return (
     <div>
       <button onClick={handleExportToPNG} id="test">test png function</button>

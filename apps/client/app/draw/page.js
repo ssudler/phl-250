@@ -35,8 +35,8 @@ export default function Draw() {
       console.log('signature', signatureImage);
 
       socketClient.emit("createDrawing", {
-        prompt: promptImage,
-        signature: signatureImage,
+        promptImage: promptImage,
+        signatureImage: signatureImage,
       });
     }
   }, [promptImage, signatureImage]);
