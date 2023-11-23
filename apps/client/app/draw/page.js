@@ -41,8 +41,9 @@ export default function Draw() {
   return (
     <div className="flex items-center justify-center flex-col bg-black absolute inset-0 box-border">
       <div className="w-100 space-y-5" ref={containerRef}>
-        <h1 className="text-white text-7xl">PHILADELPHIA IS ...</h1>
+        <p className="text-white text-7xl font-bold">PHILADELPHIA IS...</p>
         <Canvas isSubmitting={isSubmitting} setImage={setPromptImage} container={containerRef} />
+        <p className="text-white text-xl font-bold">Your signature here:</p>
         <Canvas isSubmitting={isSubmitting} setImage={setSignatureImage} container={containerRef} />
         <button
           onClick={() => setIsSubmitting(true)}

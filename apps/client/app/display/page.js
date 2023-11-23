@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 
 export default function Display() {
   const canvasRef = React.useRef(null);
-  const [images, setImages] = React.useState([]);
+  const [images, setImages] = React.useState({ data: [], lastIndexReplaced: null });
   const [canvasMounted, setCanvasMounted] = React.useState(false);
 
   const imagesPerRow = 4;
@@ -12,13 +12,6 @@ export default function Display() {
   const maxImages = imagesPerRow * imageRows;
 
   const draw = (time) => {
-    // Draw text mask, use 250 image
-    // ctx.font = "bold 75px 'Sans-serif'";
-    // ctx.fillStyle = "#FF00FF";
-    // ctx.fillText("PHL 250", 5, 60);
-    //
-    // ctx.globalCompositeOperation = "source-out";
-
     if (canvasRef.current && window && !canvasMounted) {
       canvasRef.current.width = window.innerWidth;
       canvasRef.current.height = window.innerHeight;
@@ -29,13 +22,20 @@ export default function Display() {
     if (canvasRef.current.getContext) {
       const ctx = canvasRef.current.getContext('2d');
 
+      // Draw text mask, use 250 image
+      // ctx.font = "bold 75px 'Sans-serif'";
+      // ctx.fillStyle = "#FF00FF";
+      // ctx.fillText("PHL 250", 5, 60);
+      //
+      // ctx.globalCompositeOperation = "source-out";
+
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
       const speedX = time * 0.05;
       const c = 0.3;
 
       // TODO: Memoize to improve efficiency, use delta instead of time
-      images.forEach((image, index) => {
+      images.data.forEach((image, index) => {
         const direction = Math.pow(-1, Math.floor(index / imagesPerRow));
         const columnSpacingX = (index % imagesPerRow) * (window.innerWidth / imagesPerRow);
         const offsetX = (columnSpacingX + speedX);
@@ -68,11 +68,21 @@ export default function Display() {
         const pic = new Image();
         pic.src = data.promptImage;
 
-        if (prevImages.length === maxImages) {
-          return prevImages.slice(1, prevImages.length).concat(pic);
+        if (prevImages.data.length === maxImages) {
+          const indexToReplace = prevImages.lastIndexReplaced !== null ? prevImages.lastIndexReplaced + 1 : 0;
+          console.log('replacing image at', indexToReplace);
+          const newData = [...prevImages.data.slice(0, indexToReplace), pic, ...prevImages.data.slice(indexToReplace + 1)];
+
+          return {
+            data: newData,
+            lastIndexReplaced: indexToReplace,
+          }
         }
 
-        return prevImages.concat(pic);
+        return {
+          data: prevImages.data.concat(pic),
+          lastIndexReplaced: null
+        };
       });
     });
 
