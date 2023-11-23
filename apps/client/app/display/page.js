@@ -61,7 +61,7 @@ export default function Display() {
   };
 
   React.useEffect(() => {
-    const socket = io("http://10.0.0.236:7000");
+    const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL);
 
     socket.on('displayImage', (data) => {
       setImages((prevImages) => {

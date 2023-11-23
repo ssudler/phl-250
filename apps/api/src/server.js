@@ -3,14 +3,14 @@ import morgan from 'morgan';
 import { Server } from 'socket.io';
 import http from 'http';
 
-const port = parseInt(process.env.PORT, 10) || 7000;
+const port = parseInt(process.env.PORT, 10);
 const dev = process.env.NODE_ENV !== 'production';
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://10.0.0.236:3000',
+    origin: process.env.CLIENT_URL,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Access-Control-Allow-Origin'],
     credentials: true,
@@ -37,5 +37,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(port, () => {
-  console.log(`listening on *:${port}`);
+  console.log('Listening on port', port);
 });
