@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stage, Layer, Line, Rect } from 'react-konva';
 
-const DrawingCanvas = ({ isSubmitting, setImage }) => {
+const DrawingCanvas = ({ isSubmitting, setImage, container }) => {
   const [lines, setLines] = React.useState([]);
   const stageRef = React.useRef(null);
   const isDrawing = React.useRef(false);
@@ -44,11 +44,13 @@ const DrawingCanvas = ({ isSubmitting, setImage }) => {
     if (isSubmitting) handleExportToPNG();
   }, [isSubmitting]);
 
+  if (!container.current) return <></>;
+
   return (
     <div>
       <Stage
         ref={stageRef}
-        width={500}
+        width={container.current.offsetWidth}
         height={200}
         onTap={handleMouseDown}
         onTouchstart={handleMouseDown}
@@ -59,7 +61,13 @@ const DrawingCanvas = ({ isSubmitting, setImage }) => {
         onMouseup={handleMouseUp}
       >
         <Layer>
-          <Rect width={800} height={600} fill="black" />
+          <Rect
+            width={container.current.offsetWidth}
+            height={200}
+            stroke="white"
+            strokeWidth={1}
+            dash={[5, 5]}
+          />
         </Layer>
         <Layer>
           {lines.map((line, i) => (
@@ -67,13 +75,10 @@ const DrawingCanvas = ({ isSubmitting, setImage }) => {
               key={i}
               points={line.points}
               stroke="white"
-              strokeWidth={5}
-              tension={0.5}
+              strokeWidth={10}
               lineCap="round"
               lineJoin="round"
-              globalCompositeOperation={
-                line.tool === 'eraser' ? 'destination-out' : 'source-over'
-              }
+              globalCompositeOperation="source-over"
             />
           ))}
         </Layer>

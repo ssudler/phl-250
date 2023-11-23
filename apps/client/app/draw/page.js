@@ -12,6 +12,7 @@ export default function Draw() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [promptImage, setPromptImage] = React.useState(null);
   const [signatureImage, setSignatureImage] = React.useState(null);
+  const containerRef = React.useRef(null);
 
   React.useEffect(() => {
     const socket = io('http://10.0.0.236:7000');
@@ -42,21 +43,18 @@ export default function Draw() {
   }, [promptImage, signatureImage]);
 
   return (
-    <div>
-      <div>
-        <h1>PHILLY IS</h1>
-        <Canvas isSubmitting={isSubmitting} setImage={setPromptImage} />
+    <div className="flex items-center justify-center flex-col bg-black absolute inset-0">
+      <div className="w-100 space-y-5" ref={containerRef}>
+        <h1 className="text-white text-7xl">PHILADELPHIA IS ...</h1>
+        <Canvas isSubmitting={isSubmitting} setImage={setPromptImage} container={containerRef} />
+        <Canvas isSubmitting={isSubmitting} setImage={setSignatureImage} container={containerRef} />
+        <button
+          onClick={() => setIsSubmitting(true)}
+          className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"
+        >
+          Submit
+        </button>
       </div>
-      <div>
-        <h1>Your signature:</h1>
-        <Canvas isSubmitting={isSubmitting} setImage={setSignatureImage} />
-      </div>
-      <button
-        onClick={() => setIsSubmitting(true)}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Submit
-      </button>
     </div>
   );
 }
