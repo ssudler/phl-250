@@ -70,7 +70,6 @@ export default function Display() {
 
         if (prevImages.data.length === maxImages) {
           const indexToReplace = prevImages.lastIndexReplaced !== null ? prevImages.lastIndexReplaced + 1 : 0;
-          console.log('replacing image at', indexToReplace);
           const newData = [...prevImages.data.slice(0, indexToReplace), pic, ...prevImages.data.slice(indexToReplace + 1)];
 
           return {

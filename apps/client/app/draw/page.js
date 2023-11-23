@@ -20,10 +20,6 @@ export default function Draw() {
 
     setSocketClient(socket);
 
-    socket.on('message', (message) => {
-      console.log(message);
-    });
-
     return () => {
       socket.disconnect();
     };
