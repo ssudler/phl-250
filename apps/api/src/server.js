@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
 
   socket.on('createDrawing', ({ promptImage, signatureImage }) => {
     console.log(`user with id-${socket.id} has given data`);
-    
+
     io.emit('displayImage', { promptImage });
 
     // TODO: Add logic for sending signatures to print page
