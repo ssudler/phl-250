@@ -31,11 +31,7 @@ export default function Draw() {
 
   React.useEffect(() => {
     if (promptImage && signatureImage) {
-      console.log('submitted');
-      console.log('prompt', promptImage);
-      console.log('signature', signatureImage);
-
-      socketClient.emit("createDrawing", {
+      socketClient.emit('createDrawing', {
         promptImage: promptImage,
         signatureImage: signatureImage,
       });
@@ -43,7 +39,7 @@ export default function Draw() {
   }, [promptImage, signatureImage]);
 
   return (
-    <div className="flex items-center justify-center flex-col bg-black absolute inset-0">
+    <div className="flex items-center justify-center flex-col bg-black absolute inset-0 box-border">
       <div className="w-100 space-y-5" ref={containerRef}>
         <h1 className="text-white text-7xl">PHILADELPHIA IS ...</h1>
         <Canvas isSubmitting={isSubmitting} setImage={setPromptImage} container={containerRef} />

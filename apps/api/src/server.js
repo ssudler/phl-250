@@ -25,10 +25,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 io.on('connection', (socket) => {
-  console.log('User connected');
+  console.log('User connected', socket.id);
 
   socket.on('createDrawing', ({ promptImage, signatureImage }) => {
-    console.log(`user with id-${socket.id} has given data`);
+    console.log(`User ${socket.id} has sent image`);
 
     io.emit('displayImage', { promptImage });
 

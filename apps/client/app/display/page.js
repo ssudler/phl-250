@@ -4,10 +4,9 @@ import io from 'socket.io-client';
 
 export default function Display() {
   const canvasRef = React.useRef(null);
-  const [socketConnection, setSocketConnection] = React.useState(null);
   const [images, setImages] = React.useState([]);
-  const [updateInterval, setUpdateInterval] = React.useState(null);
   const [canvasMounted, setCanvasMounted] = React.useState(false);
+
   const imagesPerRow = 4;
   const imageRows = 4;
   const maxImages = imagesPerRow * imageRows;
@@ -33,9 +32,9 @@ export default function Display() {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
       const speedX = time * 0.05;
-      const c = 0.2;
+      const c = 0.3;
 
-      // TODO: Memoize to improve efficiency
+      // TODO: Memoize to improve efficiency, use delta instead of time
       images.forEach((image, index) => {
         const direction = Math.pow(-1, Math.floor(index / imagesPerRow));
         const columnSpacingX = (index % imagesPerRow) * (window.innerWidth / imagesPerRow);
@@ -46,11 +45,15 @@ export default function Display() {
         const textOffsetX = positionX;
         const imageOffsetX = positionX + 200;
 
+        const scaledContentWidth = window.innerWidth / imagesPerRow;
+        const scaledImageWidth = 0.5 * scaledContentWidth;
+        const scaledImageHeight = (scaledImageWidth / image.width) * image.height;
+
         ctx.font = "40px Arial";
         ctx.fillStyle = "white";
-        ctx.fillText("PHILLY IS", textOffsetX, 10 + positionY + (image.height / 4));
+        ctx.fillText("PHILLY IS", textOffsetX, 15 + positionY + (scaledImageHeight / 2));
 
-        ctx.drawImage(image, imageOffsetX, positionY, image.width / 2, image.height / 2);
+        ctx.drawImage(image, imageOffsetX, positionY, scaledImageWidth, scaledImageHeight);
       });
     }
 
@@ -60,11 +63,7 @@ export default function Display() {
   React.useEffect(() => {
     const socket = io("http://10.0.0.236:7000");
 
-    setSocketConnection(socket);
-
     socket.on('displayImage', (data) => {
-      console.log('received an image');
-
       setImages((prevImages) => {
         const pic = new Image();
         pic.src = data.promptImage;

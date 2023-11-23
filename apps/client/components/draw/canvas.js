@@ -1,7 +1,8 @@
 import React from 'react';
-import { Stage, Layer, Line, Rect } from 'react-konva';
+import { Stage, Layer, Line } from 'react-konva';
 
 const DrawingCanvas = ({ isSubmitting, setImage, container }) => {
+  const [stageWidth, setStageWidth] = React.useState(null);
   const [lines, setLines] = React.useState([]);
   const stageRef = React.useRef(null);
   const isDrawing = React.useRef(false);
@@ -44,13 +45,17 @@ const DrawingCanvas = ({ isSubmitting, setImage, container }) => {
     if (isSubmitting) handleExportToPNG();
   }, [isSubmitting]);
 
-  if (!container.current) return <></>;
+  React.useEffect(() => {
+    setStageWidth(container.current.offsetWidth);
+  }, []);
+
+  if (!stageWidth) return <></>;
 
   return (
-    <div>
+    <div className="border border-white">
       <Stage
         ref={stageRef}
-        width={container.current.offsetWidth}
+        width={stageWidth}
         height={200}
         onTap={handleMouseDown}
         onTouchstart={handleMouseDown}
@@ -60,15 +65,6 @@ const DrawingCanvas = ({ isSubmitting, setImage, container }) => {
         onMousemove={handleMouseMove}
         onMouseup={handleMouseUp}
       >
-        <Layer>
-          <Rect
-            width={container.current.offsetWidth}
-            height={200}
-            stroke="white"
-            strokeWidth={1}
-            dash={[5, 5]}
-          />
-        </Layer>
         <Layer>
           {lines.map((line, i) => (
             <Line
