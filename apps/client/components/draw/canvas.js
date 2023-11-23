@@ -46,7 +46,6 @@ const DrawingCanvas = ({ isSubmitting, setImage }) => {
 
   return (
     <div>
-      <button onClick={handleExportToPNG} id="test">test png function</button>
       <Stage
         ref={stageRef}
         width={500}
@@ -60,14 +59,14 @@ const DrawingCanvas = ({ isSubmitting, setImage }) => {
         onMouseup={handleMouseUp}
       >
         <Layer>
-          <Rect width={800} height={600} fill="white" />
+          <Rect width={800} height={600} fill="black" />
         </Layer>
         <Layer>
           {lines.map((line, i) => (
             <Line
               key={i}
               points={line.points}
-              stroke="#df4b26"
+              stroke="white"
               strokeWidth={5}
               tension={0.5}
               lineCap="round"

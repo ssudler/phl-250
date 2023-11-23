@@ -6,10 +6,19 @@ export default function Display() {
   const canvasRef = React.useRef(null);
   const [socketConnection, setSocketConnection] = React.useState(null);
   const [images, setImages] = React.useState([]);
+  const [updateInterval, setUpdateInterval] = React.useState(null);
+  const maxImages = 20;
+  const imagesPerRow = 5;
 
   const setupCanvas = () => {
-    canvasRef.current.width = window.innerWidth;
-    canvasRef.current.height = window.innerHeight;
+    console.log('setting up canvas');
+
+    if (canvasRef.current && window) {
+      canvasRef.current.width = window.innerWidth;
+      canvasRef.current.height = window.innerHeight;
+
+      window.requestAnimationFrame(draw);
+    }
 
     // Draw text mask, use 250 image
     // ctx.font = "bold 75px 'Sans-serif'";
@@ -19,40 +28,36 @@ export default function Display() {
     // ctx.globalCompositeOperation = "source-out";
   }
 
-  const draw = (t) => {
+  const draw = (time) => {
     if (canvasRef.current.getContext) {
       const ctx = canvasRef.current.getContext('2d');
 
-      images.forEach((image, index) => {
-        const offsetX = ((((index % 5) * 200) + (t * 2)) % window.innerWidth) - 100;
-        const offsetY = (Math.floor(index / 5) * 200) + 60;
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-        const textOffsetX = offsetX;
-        const imageOffsetX = offsetX + 100;
+      images.forEach((image, index) => {
+        const direction = Math.pow(-1, Math.floor(index / imagesPerRow));
+        const speedX = time * 0.04;
+        const columnSpacingX = (index % imagesPerRow) * (window.innerWidth / imagesPerRow);
+
+        const c = 0.1;
+        const offsetX = (columnSpacingX + speedX);
+        const positionX = (1 / (1 - c)) * (((offsetX % window.innerWidth) * direction + (direction === 1 ? 0 : window.innerWidth)) - (window.innerWidth * c));
+        const positionY = (Math.floor(index / imagesPerRow) * 200) + 60;
+
+        const textOffsetX = positionX;
+        const imageOffsetX = positionX + 100;
 
         ctx.font = "20px Arial";
-        ctx.fillStyle = "black";
-        ctx.fillText("PHILLY IS", textOffsetX, offsetY);
+        ctx.fillStyle = "white";
+        ctx.fillText("PHILLY IS", textOffsetX, positionY);
 
         const img = new Image();
         img.src = image;
-        ctx.drawImage(img, imageOffsetX, offsetY, 100, 100);
+        ctx.drawImage(img, imageOffsetX, positionY, 100, 100);
       });
     }
-  }
 
-  const update = () => {
-    const fps = 30;
-    let t = 0;
-
-    if (canvasRef.current.getContext) {
-      setInterval(() => {
-        const ctx = canvasRef.current.getContext('2d');
-        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        draw(t);
-        t++;
-      }, 1000 / fps);
-    }
+    requestAnimationFrame(draw);
   }
 
   React.useEffect(() => {
@@ -60,22 +65,31 @@ export default function Display() {
 
     setSocketConnection(socket);
 
-    setupCanvas();
+    socket.on('displayImage', (data) => {
+      console.log('received an image');
 
-    socket.on('displayImage', (data) => images.push(data.promptImage));
+      setImages((prevImages) => {
+        if (prevImages.length === maxImages) {
+          const newArr = prevImages.shift();
+
+          return newArr.concat(data.promptImage);
+        }
+
+        return prevImages.concat(data.promptImage);
+      });
+    });
 
     return () => {
       socket.disconnect();
     };
   }, []);
 
-  React.useEffect(() => {
-    update();
-  }, [images]);
+  // TODO: Fix this
+  setupCanvas();
 
   return (
     <main>
-      <canvas ref={canvasRef} style={{ backgroundColor: 'white' }}>
+      <canvas ref={canvasRef} style={{ backgroundColor: 'black' }}>
       </canvas>
     </main>
   )
