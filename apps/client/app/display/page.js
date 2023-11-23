@@ -69,7 +69,9 @@ export default function Display() {
         pic.src = data.promptImage;
 
         if (prevImages.data.length === maxImages) {
-          const indexToReplace = prevImages.lastIndexReplaced !== null ? prevImages.lastIndexReplaced + 1 : 0;
+          const indexToReplace = prevImages.lastIndexReplaced !== null
+            ? (prevImages.lastIndexReplaced + 1) % maxImages
+            : 0;
           const newData = [...prevImages.data.slice(0, indexToReplace), pic, ...prevImages.data.slice(indexToReplace + 1)];
 
           return {
