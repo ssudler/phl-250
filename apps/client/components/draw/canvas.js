@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 
-const DrawingCanvas = ({ isSubmitting, setImage, container }) => {
+const DrawingCanvas = ({ isSubmitting, image, setImage, container }) => {
   const [stageWidth, setStageWidth] = React.useState(null);
   const [lines, setLines] = React.useState([]);
   const stageRef = React.useRef(null);
@@ -49,10 +49,14 @@ const DrawingCanvas = ({ isSubmitting, setImage, container }) => {
     setStageWidth(container.current.offsetWidth);
   }, []);
 
+  React.useEffect(() => {
+    if (!image) setLines([]);
+  }, [image]);
+
   if (!stageWidth) return <></>;
 
   return (
-    <div className="border border-white">
+    <div className="border border-gray-200">
       <Stage
         ref={stageRef}
         width={stageWidth}
