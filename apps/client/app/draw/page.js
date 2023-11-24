@@ -42,38 +42,38 @@ export default function Draw() {
 
   return (
     <>
-    <div className="flex items-center justify-center flex-col bg-black absolute inset-0 box-border">
-      <div className="w-100 space-y-5" ref={containerRef}>
-        <div>
-          <p className="text-white text-7xl font-bold mb-3">PHILADELPHIA IS...</p>
-          <Canvas
-            isSubmitting={isSubmitting}
-            image={promptImage}
-            setImage={setPromptImage}
-            container={containerRef}
-          />
-        </div>
-        <div>
-          <p className="text-white text-xl font-bold mb-3">Your signature here:</p>
-          <Canvas
-            isSubmitting={isSubmitting}
-            image={signatureImage}
-            setImage={setSignatureImage}
-            container={containerRef}
-          />
-        </div>
-        <button
-          onClick={() => {
-            setIsSubmitting(true);
-            setSuccessModalOpen(true);
-          }}
-          className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"
-        >
-          Submit
-        </button>
-      </div>
-    </div>
       <SuccessModal isOpen={successModalOpen} setIsOpen={setSuccessModalOpen}/>
-      </>
+      <div className="flex items-center justify-center flex-col bg-black absolute inset-0 box-border">
+        <div className="w-100 space-y-5" ref={containerRef}>
+          <div>
+            <p className="text-white text-7xl font-bold mb-3">PHILADELPHIA IS...</p>
+            <Canvas
+              isSubmitting={isSubmitting}
+              image={promptImage}
+              setImage={setPromptImage}
+              container={containerRef}
+            />
+          </div>
+          <div>
+            <p className="text-white text-xl font-bold mb-3">Your signature here:</p>
+            <Canvas
+              isSubmitting={isSubmitting}
+              image={signatureImage}
+              setImage={setSignatureImage}
+              container={containerRef}
+            />
+          </div>
+          <button
+            onClick={() => {
+              setIsSubmitting(true);
+              setSuccessModalOpen(true);
+            }}
+            className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
