@@ -44,9 +44,9 @@ export default function Draw() {
     <>
       <SuccessModal isOpen={successModalOpen} setIsOpen={setSuccessModalOpen}/>
       <div className="flex items-center justify-center flex-col bg-black absolute inset-0 box-border">
-        <div className="w-100 space-y-5" ref={containerRef}>
+        <div className="w-1/2 space-y-5" ref={containerRef}>
           <div>
-            <p className="text-white text-7xl font-bold mb-3">PHILADELPHIA IS...</p>
+            <p className="text-white text-7xl font-bold mb-3">PHILLY IS...</p>
             <Canvas
               isSubmitting={isSubmitting}
               image={promptImage}
