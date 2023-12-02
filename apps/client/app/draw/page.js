@@ -29,7 +29,7 @@ export default function Draw() {
 
   React.useEffect(() => {
     if (promptImage && signatureImage && isSubmitting) {
-      socketClient.emit('createDrawing', {
+      socketClient.emit('submit', {
         promptImage: promptImage,
         signatureImage: signatureImage,
       });

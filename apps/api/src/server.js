@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import { Server } from 'socket.io';
 import http from 'http';
+import createStickerImage from '../helpers/create-sticker-image.js';
 
 const port = parseInt(process.env.PORT, 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -27,12 +28,16 @@ app.use(express.urlencoded({ extended: false }));
 io.on('connection', (socket) => {
   console.log('User connected', socket.id);
 
-  socket.on('createDrawing', ({ promptImage, signatureImage }) => {
+  socket.on('submit', async ({ promptText, signatureImage }) => {
     console.log(`User ${socket.id} has sent image`);
 
-    io.emit('displayImage', { promptImage });
+    io.emit('displayImage', { signatureImage });
 
-    // TODO: Add logic for sending signatures to print page
+    const stickerImageData = await createStickerImage(promptText);
+
+    console.log('Created sticker image', stickerImageData);
+
+    // TODO: Emit stickerImageData via axios to NGROK URL
   });
 });
 
