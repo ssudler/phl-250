@@ -3,7 +3,6 @@ import morgan from 'morgan';
 import { Server } from 'socket.io';
 import http from 'http';
 import axios from 'axios';
-import createStickerImage from '../helpers/create-sticker-image.js';
 
 const port = parseInt(process.env.PORT, 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -33,17 +32,11 @@ io.on('connection', (socket) => {
     console.log(`User ${socket.id} has sent image`);
 
     acknowledgeEvent();
+
     io.emit('displayImage', { signatureImage });
 
     const formattedPromptText = ['.', '!', '?'].includes(promptText.slice(-1)) ? promptText : `${promptText}.`;
-    const stickerImageData = await createStickerImage(formattedPromptText);
-    console.log('Created sticker image');
-
-    // const bufferData = Buffer.from(stickerImageData.bitmap.data, 'base64');
-    // const imageString = bufferData.toString('base64');
-
-    // await axios.post(`${process.env.STICKER_API_BASE_URL}/print`, { data: imageString })
-    //   .catch((err) => console.log(err));
+    await axios.post(`${process.env.STICKER_API_BASE_URL}/print`, { data: formattedPromptText });
   });
 });
 

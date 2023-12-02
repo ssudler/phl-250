@@ -91,9 +91,7 @@ export default function Display() {
       signatureImage.src = data.signatureImage;
     });
 
-    return () => {
-      socket.disconnect();
-    };
+    return () => socket.disconnect();
   }, []);
 
   React.useEffect(() => {

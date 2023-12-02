@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "dev": "concurrently \"nodemon src/server.js\" \"npm run ngrok\"",
+    "start": "concurrently \"node src/server.js\" \"npm run ngrok\"",
+    "ngrok": "ngrok http --domain=bold-remotely-giraffe.ngrok-free.app 9000"
   },
   "dependencies": {
     "express": "^4.18.2",
+    "jimp": "^0.22.10",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "nodemon": "^3.0.1"
   }
 }
