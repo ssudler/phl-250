@@ -61,30 +61,34 @@ export default function Display() {
   };
 
   React.useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL);
+    // TODO: Change in production
+    const socket = io('http://localhost:7000');
 
     socket.on('displayImage', (data) => {
-      setImages((prevImages) => {
-        const pic = new Image();
-        pic.src = data.promptImage;
+      const signatureImage = new Image();
 
-        if (prevImages.data.length === maxImages) {
-          const indexToReplace = prevImages.lastIndexReplaced !== null
-            ? (prevImages.lastIndexReplaced + 1) % maxImages
-            : 0;
-          const newData = [...prevImages.data.slice(0, indexToReplace), pic, ...prevImages.data.slice(indexToReplace + 1)];
+      signatureImage.onload = () => {
+        setImages((prevImages) => {
+          if (prevImages.data.length === maxImages) {
+            const indexToReplace = prevImages.lastIndexReplaced !== null
+              ? (prevImages.lastIndexReplaced + 1) % maxImages
+              : 0;
+            const newData = [...prevImages.data.slice(0, indexToReplace), signatureImage, ...prevImages.data.slice(indexToReplace + 1)];
+
+            return {
+              data: newData,
+              lastIndexReplaced: indexToReplace,
+            }
+          }
 
           return {
-            data: newData,
-            lastIndexReplaced: indexToReplace,
-          }
-        }
+            data: prevImages.data.concat(signatureImage),
+            lastIndexReplaced: null
+          };
+        });
+      }
 
-        return {
-          data: prevImages.data.concat(pic),
-          lastIndexReplaced: null
-        };
-      });
+      signatureImage.src = data.signatureImage;
     });
 
     return () => {
@@ -98,7 +102,7 @@ export default function Display() {
 
   return (
     <main>
-      <canvas ref={canvasRef} style={{ backgroundColor: 'black' }}>
+      <canvas ref={canvasRef}>
       </canvas>
     </main>
   )

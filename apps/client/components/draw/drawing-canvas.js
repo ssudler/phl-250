@@ -1,10 +1,9 @@
 import React from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 
-const DrawingCanvas = ({ isSubmitting, image, setImage, container }) => {
+const DrawingCanvas = ({ isSubmitting, container, stageRef }) => {
   const [stageWidth, setStageWidth] = React.useState(null);
   const [lines, setLines] = React.useState([]);
-  const stageRef = React.useRef(null);
   const isDrawing = React.useRef(false);
 
   const handleMouseDown = (e) => {
@@ -35,28 +34,19 @@ const DrawingCanvas = ({ isSubmitting, image, setImage, container }) => {
     isDrawing.current = false;
   };
 
-  const handleExportToPNG = () => {
-    const uri = stageRef.current.toDataURL();
-
-    setImage(uri);
-  };
-
-  React.useEffect(() => {
-    if (isSubmitting) handleExportToPNG();
-  }, [isSubmitting]);
-
   React.useEffect(() => {
     setStageWidth(container.current.offsetWidth);
   }, []);
 
   React.useEffect(() => {
-    if (!image) setLines([]);
-  }, [image]);
+    console.log(isSubmitting);
+    if (isSubmitting) setLines([]);
+  }, [isSubmitting]);
 
   if (!stageWidth) return <></>;
 
   return (
-    <div className="border border-gray-200">
+    <div className="border border-gray-400">
       <Stage
         ref={stageRef}
         width={stageWidth}
@@ -74,8 +64,8 @@ const DrawingCanvas = ({ isSubmitting, image, setImage, container }) => {
             <Line
               key={i}
               points={line.points}
-              stroke="white"
-              strokeWidth={10}
+              stroke="black"
+              strokeWidth={7}
               lineCap="round"
               lineJoin="round"
               globalCompositeOperation="source-over"

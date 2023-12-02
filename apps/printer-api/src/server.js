@@ -23,7 +23,7 @@ app.post('/print', (req, res) => {
 
   const printCommand = `echo ${req.body.data} | base64 --decode | lp`;
 
-  exec(printCommand, (error, stdout, stderr) => {
+  exec('ls', (error, stdout, stderr) => {
     if (error) {
       console.error(`Error: ${error.message}`);
       return res.sendStatus(400);
