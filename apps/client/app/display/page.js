@@ -70,8 +70,7 @@ export default function Display() {
   };
 
   React.useEffect(() => {
-    // TODO: Change in production
-    const socket = io('http://localhost:7000');
+    const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL);
 
     socket.on('displayImage', (data) => {
       const signatureImage = new Image();
