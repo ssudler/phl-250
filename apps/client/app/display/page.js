@@ -109,10 +109,10 @@ export default function Display() {
 
   return (
     <main className="absolute p-0">
-      <div className={clsx({ 'hidden': !showStaticImage.showing }, 'h-screen w-screen bg-black z-50 flex items-center justify-center')}>
+      <div className={clsx({ 'hidden': !showStaticImage.showing }, 'absolute h-screen w-screen bg-black z-50 flex items-center justify-center')}>
         <h1 className="text-white text-[160px] font-bold">Philly is <u>&emsp;&emsp;&emsp;&emsp;.</u></h1>
       </div>
-      <div className={clsx({ 'hidden': showStaticImage.showing })}>
+      <div>
         <NextImage
           src="/250-mask.png"
           fill
