@@ -71,7 +71,7 @@ const Canvas = ({ isSubmitting, container, stageRef }) => {
             <Line
               key={i}
               points={line.points}
-              stroke="white"
+              stroke="black"
               strokeWidth={7}
               lineCap="round"
               lineJoin="round"
