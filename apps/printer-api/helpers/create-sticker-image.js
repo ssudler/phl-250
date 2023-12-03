@@ -42,8 +42,6 @@ export default async function createStickerImage(text) {
       createJimpRect(underlineColor)
     );
 
-    console.log('writing image async');
-
     await image.writeAsync('./assets/composite.png');
   } catch (error) {
     console.error('Error:', error);

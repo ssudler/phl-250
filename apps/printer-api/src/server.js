@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.post('/print', async (req, res) => {
-  console.log('Initiating print job with base64 image data', req.body.data);
+  console.log('Initiating print job with prompt response:', req.body.data);
 
   if (!req.body.data) return res.sendStatus(400);
 

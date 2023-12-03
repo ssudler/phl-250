@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
     io.emit('displayImage', { signatureImage });
 
     const formattedPromptText = ['.', '!', '?'].includes(promptText.slice(-1)) ? promptText : `${promptText}.`;
-    await axios.post(`${process.env.STICKER_API_BASE_URL}/print`, { data: formattedPromptText });
+    // await axios.post(`${process.env.STICKER_API_BASE_URL}/print`, { data: formattedPromptText });
   });
 });
 

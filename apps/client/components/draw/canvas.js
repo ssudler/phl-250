@@ -1,33 +1,41 @@
 import React from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 
-const DrawingCanvas = ({ isSubmitting, container, stageRef }) => {
+const Canvas = ({ isSubmitting, container, stageRef }) => {
   const [stageWidth, setStageWidth] = React.useState(null);
   const [lines, setLines] = React.useState([]);
   const isDrawing = React.useRef(false);
 
   const handleMouseDown = (e) => {
-    e.evt.preventDefault();
+    try {
+      e.evt.preventDefault();
 
-    isDrawing.current = true;
-    const pos = e.target.getStage().getPointerPosition();
-    setLines([...lines, { tool: 'pen', points: [pos.x, pos.y] }]);
+      isDrawing.current = true;
+      const pos = e.target.getStage().getPointerPosition();
+      setLines([...lines, { tool: 'pen', points: [pos.x, pos.y] }]);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleMouseMove = (e) => {
-    e.evt.preventDefault();
+    try {
+      e.evt.preventDefault();
 
-    if (!isDrawing.current) return;
+      if (!isDrawing.current) return;
 
-    const stage = e.target.getStage();
-    const point = stage.getPointerPosition();
-    let lastLine = lines[lines.length - 1];
+      const stage = e.target.getStage();
+      const point = stage.getPointerPosition();
+      let lastLine = lines[lines.length - 1];
 
-    lastLine.points = lastLine.points.concat([point.x, point.y]);
+      lastLine.points = lastLine.points.concat([point.x, point.y]);
 
-    lines.splice(lines.length - 1, 1, lastLine);
+      lines.splice(lines.length - 1, 1, lastLine);
 
-    setLines(lines.concat());
+      setLines(lines.concat());
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleMouseUp = () => {
@@ -39,7 +47,6 @@ const DrawingCanvas = ({ isSubmitting, container, stageRef }) => {
   }, []);
 
   React.useEffect(() => {
-    console.log(isSubmitting);
     if (isSubmitting) setLines([]);
   }, [isSubmitting]);
 
@@ -64,7 +71,7 @@ const DrawingCanvas = ({ isSubmitting, container, stageRef }) => {
             <Line
               key={i}
               points={line.points}
-              stroke="black"
+              stroke="white"
               strokeWidth={7}
               lineCap="round"
               lineJoin="round"
@@ -77,4 +84,4 @@ const DrawingCanvas = ({ isSubmitting, container, stageRef }) => {
   );
 };
 
-export default DrawingCanvas;
+export default Canvas;

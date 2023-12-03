@@ -6,7 +6,7 @@ import SuccessModal from '../../components/draw/success-modal';
 import { Formik, Field, Form } from 'formik';
 import TextInput from '../../components/draw/text-input';
 
-const DrawingCanvas = dynamic(() => import('../../components/draw/drawing-canvas'), { ssr: false });
+const DrawingCanvas = dynamic(() => import('../../components/draw/canvas'), { ssr: false });
 
 export default function Draw() {
   const [socketClient, setSocketClient] = React.useState(null);

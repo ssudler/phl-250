@@ -1,17 +1,39 @@
 'use client';
 import React from 'react';
 import io from 'socket.io-client';
+import NextImage from 'next/image';
+import clsx from 'clsx';
 
 export default function Display() {
   const canvasRef = React.useRef(null);
+  const [showStaticImage, setShowStaticImage] = React.useState({ showing: true, lastUpdated: 0 });
   const [images, setImages] = React.useState({ data: [], lastIndexReplaced: null });
   const [canvasMounted, setCanvasMounted] = React.useState(false);
 
-  const imagesPerRow = 4;
-  const imageRows = 4;
+  const imagesPerRow = 10;
+  const imageRows = 9;
   const maxImages = imagesPerRow * imageRows;
 
   const draw = (time) => {
+    const staticDurationVisible = 15;
+    const canvasDurationVisible = 45;
+    const secondsElapsed = Math.floor(time / 1000);
+    const delta = secondsElapsed - showStaticImage.lastUpdated;
+
+    if (showStaticImage.showing && (delta === staticDurationVisible)) {
+      setShowStaticImage({
+        showing: false,
+        lastUpdated: secondsElapsed,
+      });
+    }
+
+    if (!showStaticImage.showing && (delta === canvasDurationVisible)) {
+      setShowStaticImage({
+        showing: true,
+        lastUpdated: secondsElapsed,
+      });
+    }
+
     if (canvasRef.current && window && !canvasMounted) {
       canvasRef.current.width = window.innerWidth;
       canvasRef.current.height = window.innerHeight;
@@ -22,38 +44,25 @@ export default function Display() {
     if (canvasRef.current.getContext) {
       const ctx = canvasRef.current.getContext('2d');
 
-      // Draw text mask, use 250 image
-      // ctx.font = "bold 75px 'Sans-serif'";
-      // ctx.fillStyle = "#FF00FF";
-      // ctx.fillText("PHL 250", 5, 60);
-      //
-      // ctx.globalCompositeOperation = "source-out";
-
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
       const speedX = time * 0.05;
-      const c = 0.3;
+      const c = 0.15;
 
-      // TODO: Memoize to improve efficiency, use delta instead of time
+      // TODO: Refactor for style
       images.data.forEach((image, index) => {
-        const direction = Math.pow(-1, Math.floor(index / imagesPerRow));
+        const direction = -1;
         const columnSpacingX = (index % imagesPerRow) * (window.innerWidth / imagesPerRow);
         const offsetX = (columnSpacingX + speedX);
+
         const positionX = (1 / (1 - c)) * (((offsetX % window.innerWidth) * direction + (direction === 1 ? 0 : window.innerWidth)) - (window.innerWidth * c));
-        const positionY = (Math.floor(index / imagesPerRow) * 200) + 60;
+        const positionY = (Math.floor(index / imagesPerRow) * 50) + (window.innerHeight * 0.4);
 
-        const textOffsetX = positionX;
         const imageOffsetX = positionX + 200;
-
         const scaledContentWidth = window.innerWidth / imagesPerRow;
-        const scaledImageWidth = 0.5 * scaledContentWidth;
-        const scaledImageHeight = (scaledImageWidth / image.width) * image.height;
+        const scaledImageHeight = (scaledContentWidth / image.width) * image.height;
 
-        ctx.font = "40px Arial";
-        ctx.fillStyle = "white";
-        ctx.fillText("PHILLY IS", textOffsetX, 15 + positionY + (scaledImageHeight / 2));
-
-        ctx.drawImage(image, imageOffsetX, positionY, scaledImageWidth, scaledImageHeight);
+        ctx.drawImage(image, imageOffsetX, positionY, scaledContentWidth, scaledImageHeight);
       });
     }
 
@@ -95,13 +104,23 @@ export default function Display() {
   }, []);
 
   React.useEffect(() => {
-    draw();
-  }, [canvasMounted, images]);
+    draw(0);
+  }, [canvasMounted, images, showStaticImage]);
 
   return (
-    <main>
-      <canvas ref={canvasRef}>
-      </canvas>
+    <main className="absolute p-0">
+      <div className={clsx({ 'hidden': !showStaticImage.showing }, 'h-screen w-screen bg-black z-50 flex items-center justify-center')}>
+        <h1 className="text-white text-[160px] font-bold">Philly is <u>&emsp;&emsp;&emsp;&emsp;.</u></h1>
+      </div>
+      <div className={clsx({ 'hidden': showStaticImage.showing })}>
+        <NextImage
+          src="/250-mask.png"
+          fill
+          alt="250 mask"
+        />
+        <canvas ref={canvasRef}>
+        </canvas>
+      </div>
     </main>
   )
 }
