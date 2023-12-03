@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000', process.env.CLIENT_URL],
+    origin: process.env.CLIENT_URL,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Access-Control-Allow-Origin'],
     credentials: true,
@@ -36,7 +36,8 @@ io.on('connection', (socket) => {
     io.emit('displayImage', { signatureImage });
 
     const formattedPromptText = ['.', '!', '?'].includes(promptText.slice(-1)) ? promptText : `${promptText}.`;
-    // await axios.post(`${process.env.STICKER_API_BASE_URL}/print`, { data: formattedPromptText });
+
+    await axios.post(`${process.env.STICKER_API_BASE_URL}/print`, { data: formattedPromptText });
   });
 });
 
