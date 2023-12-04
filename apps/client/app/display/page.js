@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 export default function Display() {
   const canvasRef = React.useRef(null);
-  const [showStaticImage, setShowStaticImage] = React.useState({ showing: true, lastUpdated: 0 });
+  const [showStaticImage, setShowStaticImage] = React.useState(false);
   const [images, setImages] = React.useState({ data: [], lastIndexReplaced: null });
   const [canvasMounted, setCanvasMounted] = React.useState(false);
 
@@ -15,25 +15,6 @@ export default function Display() {
   const maxImages = imagesPerRow * imageRows;
 
   const draw = (time) => {
-    const staticDurationVisible = 15;
-    const canvasDurationVisible = 45;
-    const secondsElapsed = Math.floor(time / 1000);
-    const delta = secondsElapsed - showStaticImage.lastUpdated;
-
-    if (showStaticImage.showing && (delta === staticDurationVisible)) {
-      setShowStaticImage({
-        showing: false,
-        lastUpdated: secondsElapsed,
-      });
-    }
-
-    if (!showStaticImage.showing && (delta === canvasDurationVisible)) {
-      setShowStaticImage({
-        showing: true,
-        lastUpdated: secondsElapsed,
-      });
-    }
-
     if (canvasRef.current && window && !canvasMounted) {
       canvasRef.current.width = window.innerWidth;
       canvasRef.current.height = window.innerHeight;
@@ -104,11 +85,24 @@ export default function Display() {
 
   React.useEffect(() => {
     draw(0);
-  }, [canvasMounted, images, showStaticImage]);
+  }, [canvasMounted, images]);
+
+  React.useEffect(() => {
+    const showStaticImageInterval = 15;
+    const showCanvasInterval = 45;
+
+    const intervalId = setInterval(() => {
+      setShowStaticImage(true);
+
+      setTimeout(() => setShowStaticImage(false), showStaticImageInterval * 1000);
+    }, showCanvasInterval * 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <main className="absolute p-0">
-      <div className={clsx({ 'hidden': !showStaticImage.showing }, 'absolute h-screen w-screen bg-black z-50 flex items-center justify-center')}>
+      <div className={clsx({ 'hidden': !showStaticImage }, 'absolute h-screen w-screen bg-black z-50 flex items-center justify-center')}>
         <h1 className="text-white text-[160px] font-bold">Philly is <u>&emsp;&emsp;&emsp;&emsp;.</u></h1>
       </div>
       <div>
