@@ -54,6 +54,9 @@ export default function Draw() {
                 as={TextInput}
                 name="promptText"
                 className="w-full text-3xl py-2 font-bold focus:outline-none border border-b-gray-400 border-t-white border-l-white border-r-white"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') e.preventDefault();
+                }}
               />
             </div>
             <div>

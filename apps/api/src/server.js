@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
   console.log('User connected', socket.id);
 
   socket.on('submit', async ({ promptText, signatureImage }, acknowledgeEvent) => {
-    console.log(`User ${socket.id} has sent image`);
+    console.log(`User ${socket.id} has sent image with prompt ${promptText}`);
 
     acknowledgeEvent();
 
