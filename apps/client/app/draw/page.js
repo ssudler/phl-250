@@ -50,7 +50,7 @@ export default function Draw() {
         >
           <Form className="w-1/2 space-y-5" ref={containerRef}>
             <div className="flex gap-5">
-              <p className="self-end text-7xl font-bold mb-3 whitespace-nowrap">PHILLY IS</p>
+              <p className="self-end text-7xl font-bold mb-3 whitespace-nowrap">Philly is</p>
               <div className="flex shrink">
                 <Field
                   as={TextInput}
