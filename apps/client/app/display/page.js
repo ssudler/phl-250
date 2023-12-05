@@ -88,21 +88,21 @@ export default function Display() {
   }, [canvasMounted, images]);
 
   React.useEffect(() => {
-    const showStaticImageInterval = 15;
-    const showCanvasInterval = 45;
+    const showStaticImageInterval = 60;
+    const showStaticImageDuration = 15;
 
     const intervalId = setInterval(() => {
       setShowStaticImage(true);
 
-      setTimeout(() => setShowStaticImage(false), showStaticImageInterval * 1000);
-    }, showCanvasInterval * 1000);
+      setTimeout(() => setShowStaticImage(false), showStaticImageDuration * 1000);
+    }, showStaticImageInterval * 1000);
 
     return () => clearInterval(intervalId);
   }, []);
 
   return (
     <main className="absolute p-0">
-      <div className={clsx({ 'hidden': !showStaticImage }, 'absolute h-screen w-screen bg-black z-50 ')}>
+      <div className={clsx({'fade-in opacity-100' : showStaticImage, 'fade-out opacity-0': !showStaticImage }, 'absolute h-screen w-screen bg-black z-50 ')}>
         <div className="h-full w-full flex flex-col items-center justify-center">
           <h1 className="text-white text-[160px] font-bold body-font font-roboto">Philly is <u>&emsp;&emsp;&emsp;&emsp;.</u></h1>
         </div>

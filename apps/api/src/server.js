@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
     const formattedPromptText = ['.', '!', '?'].includes(promptText.slice(-1)) ? promptText : `${promptText}.`;
 
     await axios.post(`${process.env.STICKER_API_BASE_URL}/print`, { data: formattedPromptText })
-      .catch((err) => console.log(err));
+      .catch(() => console.log('Attempted to print, request failed'));
   });
 });
 
