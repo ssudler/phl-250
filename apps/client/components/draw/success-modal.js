@@ -39,8 +39,8 @@ export default function SuccessModal({ isOpen, setIsOpen }) {
                 </Dialog.Title>
                 <div className="mt-3">
                   <p className="text-sm text-gray-500">
-                    Your response will be shared on the PHL 250 screen.
-                    You can get a sticker of your signature at the printing station.
+                    Your signature will be displayed on the PHL 250 screen.
+                    You can get a sticker of your response at the printing station.
                   </p>
                 </div>
 
