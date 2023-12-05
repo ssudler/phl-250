@@ -22,9 +22,9 @@ app.post('/print', async (req, res) => {
 
   if (!req.body.data) return res.sendStatus(400);
 
-  await createStickerImage(req.body.data);
+  const filePath = await createStickerImage(req.body.data);
 
-  const printCommand = 'lp ./assets/composite.png';
+  const printCommand = `lp ${filePath}`;
 
   exec(printCommand, (error, stdout, stderr) => {
     if (error) {
