@@ -102,8 +102,18 @@ export default function Display() {
 
   return (
     <main className="absolute p-0">
-      <div className={clsx({ 'hidden': !showStaticImage }, 'absolute h-screen w-screen bg-black z-50 flex items-center justify-center')}>
-        <h1 className="text-white text-[160px] font-bold">Philly is <u>&emsp;&emsp;&emsp;&emsp;.</u></h1>
+      <div className={clsx({ 'hidden': !showStaticImage }, 'absolute h-screen w-screen bg-black z-50 ')}>
+        <div className="h-full w-full flex flex-col items-center justify-center">
+          <h1 className="text-white text-[160px] font-bold body-font font-roboto">Philly is <u>&emsp;&emsp;&emsp;&emsp;.</u></h1>
+        </div>
+        <div className="absolute flex mt-[-130px] justify-center w-full">
+          <NextImage
+            src="/250-logo.png"
+            alt="PHL 250 logo"
+            width={250}
+            height={250}
+          />
+        </div>
       </div>
       <div>
         <NextImage
