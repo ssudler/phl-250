@@ -12,6 +12,7 @@ export default function Draw() {
   const [socketClient, setSocketClient] = React.useState(null);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [successModalOpen, setSuccessModalOpen] = React.useState(false);
+  const [lines, setLines] = React.useState([]);
   const containerRef = React.useRef(null);
   const stageRef = React.useRef(null);
 
@@ -48,31 +49,51 @@ export default function Draw() {
           enableReinitialize
         >
           <Form className="w-1/2 space-y-5" ref={containerRef}>
-            <div>
-              <p className="text-7xl font-bold mb-3">PHILLY IS...</p>
-              <Field
-                as={TextInput}
-                name="promptText"
-                className="w-full text-3xl py-2 font-bold focus:outline-none border border-b-gray-400 border-t-white border-l-white border-r-white"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') e.preventDefault();
-                }}
-              />
+            <div className="flex gap-5">
+              <p className="self-end text-7xl font-bold mb-3 whitespace-nowrap">PHILLY IS</p>
+              <div className="flex shrink">
+                <Field
+                  as={TextInput}
+                  name="promptText"
+                  className="w-full mt-[-10px] text-7xl font-bold focus:outline-none border border-b-black border-2 border-t-white border-l-white border-r-white"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.preventDefault();
+                  }}
+                  autoFocus={true}
+                />
+                <p className="text-7xl font-bold mb-3">.</p>
+              </div>
             </div>
-            <div>
+            <div className="flex w-full justify-center">
+              <p className="text-lg text-gray-500">Fill in one word that describes your Philly</p>
+            </div>
+            <div className="pt-20">
               <p className="text-xl mb-3">Your signature here:</p>
               <DrawingCanvas
                 isSubmitting={isSubmitting}
                 container={containerRef}
                 stageRef={stageRef}
+                lines={lines}
+                setLines={setLines}
               />
             </div>
-            <button
-              type="submit"
-              className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"
-            >
-              Submit
-            </button>
+            <div className="flex gap-4">
+              <button
+                type="submit"
+                className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"
+              >
+                Submit
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setLines([]);
+                }}
+                className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded w-full"
+              >
+                Clear signature
+              </button>
+            </div>
           </Form>
         </Formik>
       </div>

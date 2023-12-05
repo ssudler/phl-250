@@ -1,9 +1,8 @@
 import React from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 
-const Canvas = ({ isSubmitting, container, stageRef }) => {
+const Canvas = ({ isSubmitting, container, stageRef, lines, setLines }) => {
   const [stageWidth, setStageWidth] = React.useState(null);
-  const [lines, setLines] = React.useState([]);
   const isDrawing = React.useRef(false);
 
   const handleMouseDown = (e) => {
