@@ -7,7 +7,10 @@ import clsx from 'clsx';
 export default function Display() {
   const canvasRef = React.useRef(null);
   const [showStaticImage, setShowStaticImage] = React.useState(false);
-  const [images, setImages] = React.useState({ data: [], lastIndexReplaced: null });
+  const [images, setImages] = React.useState({
+    data: JSON.parse(localStorage.getItem('signatureImages')),
+    lastIndexReplaced: null,
+  });
   const [canvasMounted, setCanvasMounted] = React.useState(false);
 
   const imagesPerRow = 10;
@@ -56,13 +59,21 @@ export default function Display() {
     socket.on('displayImage', (data) => {
       const signatureImage = new Image();
 
+      // TODO: Set local storage to images
       signatureImage.onload = () => {
         setImages((prevImages) => {
           if (prevImages.data.length === maxImages) {
             const indexToReplace = prevImages.lastIndexReplaced !== null
               ? (prevImages.lastIndexReplaced + 1) % maxImages
               : 0;
-            const newData = [...prevImages.data.slice(0, indexToReplace), signatureImage, ...prevImages.data.slice(indexToReplace + 1)];
+
+            const newData = [
+              ...prevImages.data.slice(0, indexToReplace),
+              signatureImage,
+              ...prevImages.data.slice(indexToReplace + 1)
+            ];
+
+            localStorage.setItem('signatureImages', JSON.stringify(newData));
 
             return {
               data: newData,
@@ -70,8 +81,12 @@ export default function Display() {
             }
           }
 
+          const newData = prevImages.data.concat(signatureImage);
+
+          localStorage.setItem('signatureImages', JSON.stringify(newData));
+
           return {
-            data: prevImages.data.concat(signatureImage),
+            data: newData,
             lastIndexReplaced: null
           };
         });
