@@ -52,10 +52,10 @@ export default function Draw() {
           onSubmit={handleSubmit}
           enableReinitialize
         >
-          <Form className="w-1/2 space-y-5" ref={containerRef}>
+          <Form className="w-3/4 space-y-5" ref={containerRef}>
             <div className="flex gap-5">
               <p className="self-end text-7xl font-bold mb-3 whitespace-nowrap">Philly is</p>
-              <div className="flex shrink">
+              <div className="flex flex-grow">
                 <Field
                   as={TextInput}
                   name="promptText"
