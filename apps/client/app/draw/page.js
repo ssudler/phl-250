@@ -30,7 +30,7 @@ export default function Draw() {
   const handleSubmit = React.useCallback((values, { resetForm, setSubmitting }) => {
     document.activeElement.blur();
 
-    if (!lines.length) return setSubmitting(false);
+    if (!lines.length || !values.promptText) return setSubmitting(false);
 
     setIsSubmitting(true);
     setSuccessModalOpen(true);
