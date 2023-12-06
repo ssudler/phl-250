@@ -10,6 +10,7 @@ export default function Display() {
   const [images, setImages] = React.useState({ data: [], lastIndexReplaced: null });
   const [canvasMounted, setCanvasMounted] = React.useState(false);
 
+  // TODO: Refactor to be infinite scroll
   const imagesPerRow = 10;
   const imageRows = 9;
   const maxImages = imagesPerRow * imageRows;
@@ -62,20 +63,32 @@ export default function Display() {
             const indexToReplace = prevImages.lastIndexReplaced !== null
               ? (prevImages.lastIndexReplaced + 1) % maxImages
               : 0;
-            const newData = [...prevImages.data.slice(0, indexToReplace), signatureImage, ...prevImages.data.slice(indexToReplace + 1)];
+
+            const updatedImageData = [
+              ...prevImages.data.slice(0, indexToReplace),
+              signatureImage,
+              ...prevImages.data.slice(indexToReplace + 1)
+            ];
 
             return {
-              data: newData,
+              data: updatedImageData,
               lastIndexReplaced: indexToReplace,
             }
           }
 
           return {
             data: prevImages.data.concat(signatureImage),
-            lastIndexReplaced: null
+            lastIndexReplaced: null,
           };
         });
       }
+
+      const updatedLocalStorage = JSON.stringify(
+        JSON.parse(localStorage.getItem('imageSignatures') || "[]")
+        .concat(data.signatureImage)
+      );
+
+      localStorage.setItem('imageSignatures', updatedLocalStorage);
 
       signatureImage.src = data.signatureImage;
     });
@@ -88,6 +101,21 @@ export default function Display() {
   }, [canvasMounted, images]);
 
   React.useEffect(() => {
+    (async () => {
+      const localImages = JSON.parse(localStorage.getItem('imageSignatures') || "[]");
+
+      const loadedImages = await Promise.all(localImages.map((src) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+
+          img.src = src;
+          img.onload = () => resolve(img);
+        });
+      }));
+      
+      setImages({ data: loadedImages, lastIndexReplaced: null });
+    })();
+
     const showStaticImageInterval = 60;
     const showStaticImageDuration = 15;
 
