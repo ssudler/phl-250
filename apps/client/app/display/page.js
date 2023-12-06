@@ -84,7 +84,7 @@ export default function Display() {
       }
 
       const updatedLocalStorage = JSON.stringify(
-        JSON.parse(localStorage.getItem('imageSignatures') || "[]")
+        JSON.parse(localStorage.getItem('imageSignatures') || '[]')
         .concat(data.signatureImage)
       );
 
@@ -102,7 +102,7 @@ export default function Display() {
 
   React.useEffect(() => {
     (async () => {
-      const localImages = JSON.parse(localStorage.getItem('imageSignatures') || "[]");
+      const localImages = JSON.parse(localStorage.getItem('imageSignatures') || '[]');
 
       const loadedImages = await Promise.all(localImages.map((src) => {
         return new Promise((resolve) => {
@@ -112,7 +112,7 @@ export default function Display() {
           img.onload = () => resolve(img);
         });
       }));
-      
+
       setImages({ data: loadedImages, lastIndexReplaced: null });
     })();
 

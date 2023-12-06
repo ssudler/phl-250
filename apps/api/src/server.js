@@ -2,7 +2,8 @@ import express from 'express';
 import morgan from 'morgan';
 import { Server } from 'socket.io';
 import http from 'http';
-import axios from 'axios';
+import updateDatabase from './services/sheets.js';
+import createPrintRequest from './services/print.js';
 
 const port = parseInt(process.env.PORT, 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -36,9 +37,8 @@ io.on('connection', (socket) => {
     io.emit('displayImage', { signatureImage });
 
     const formattedPromptText = ['.', '!', '?'].includes(promptText.slice(-1)) ? promptText : `${promptText}.`;
-
-    await axios.post(`${process.env.STICKER_API_BASE_URL}/print`, { data: formattedPromptText })
-      .catch(() => console.log('Attempted to print, request failed'));
+    await updateDatabase(promptText, signatureImage);
+    await createPrintRequest(formattedPromptText);
   });
 });
 
