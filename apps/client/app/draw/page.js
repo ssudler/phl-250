@@ -27,7 +27,9 @@ export default function Draw() {
   }, []);
 
   // TODO: Add validation (char length, no null, etc.)
-  const handleSubmit = React.useCallback((values, { resetForm }) => {
+  const handleSubmit = React.useCallback((values, { resetForm, setSubmitting }) => {
+    if (!lines.length) return setSubmitting(false);
+
     setIsSubmitting(true);
     setSuccessModalOpen(true);
 
@@ -37,7 +39,7 @@ export default function Draw() {
     }, () => setIsSubmitting(false));
 
     resetForm();
-  }, [socketClient, stageRef, isSubmitting, setIsSubmitting]);
+  }, [socketClient, stageRef, isSubmitting, setIsSubmitting, lines]);
 
   return (
     <>
@@ -56,9 +58,6 @@ export default function Draw() {
                   as={TextInput}
                   name="promptText"
                   className="w-full mt-[-10px] text-7xl font-bold focus:outline-none border border-b-black border-2 border-t-white border-l-white border-r-white"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') e.preventDefault();
-                  }}
                   autoFocus={true}
                 />
                 <p className="text-7xl font-bold mb-3">.</p>
