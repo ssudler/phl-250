@@ -28,6 +28,8 @@ export default function Draw() {
 
   // TODO: Add validation (char length, no null, etc.)
   const handleSubmit = React.useCallback((values, { resetForm, setSubmitting }) => {
+    document.activeElement.blur();
+
     if (!lines.length) return setSubmitting(false);
 
     setIsSubmitting(true);
